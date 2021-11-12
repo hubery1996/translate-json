@@ -7,7 +7,7 @@ const log = console.log;
 async function main () {
     // 首先通过Puppeteer启动一个浏览器环境
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
         args: [
             '--incognito'
         ]
@@ -26,8 +26,8 @@ async function main () {
             //     log(chalk.blue(msg))
             // }
         })
-        let origin = 'zh-CN'
-        let target = 'ar'
+        let origin = process.argv[2]
+        let target = process.argv[3]
         await page.goto('https://translate.google.cn/?sl=' + origin + '&tl=' + target + '', { timeout: 0, waitUntil: "networkidle0" })
 
         log(chalk.yellow('进入https://translate.google.cn/'))
@@ -71,7 +71,7 @@ async function main () {
         //点击原文
         await page.click(".QFw9Te");
         await page.waitForSelector('.QFw9Te');
-        fs.readFile('locales/zh-cn.json', 'utf8', async function (err, data) {
+        fs.readFile('locales/'+origin+'.json', 'utf8', async function (err, data) {
             if (err) console.log(err);
             let _inintData = JSON.parse(data)
             for (const key in _inintData) {
